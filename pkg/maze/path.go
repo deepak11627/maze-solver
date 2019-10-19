@@ -18,6 +18,16 @@ func (s *Path) Pop() string {
 	return v
 }
 
+// Exists checks if an element exists
+func (s *Path) Exists(e string) bool {
+	for _, p := range *s {
+		if p == e {
+			return true
+		}
+	}
+	return false
+}
+
 // Traverse renders the path
 func (s *Path) Traverse() {
 	for _, p := range *s {

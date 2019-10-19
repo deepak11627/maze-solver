@@ -55,7 +55,6 @@ func NewMaze(c *Config, opts ...Option) *Maze {
 // Algorithm mentioned at https://www.cs.bu.edu/teaching/alg/maze/ has been followed to find the path
 func (m *Maze) FindPath() (*Path, error) {
 	p := &Path{}
-	fmt.Println("starting at ", m.startAt.x, m.startAt.y)
 	if m.traverse(m.startAt.x, m.startAt.y, p) == false {
 		return p, errors.New("no path found")
 	}
@@ -63,42 +62,37 @@ func (m *Maze) FindPath() (*Path, error) {
 }
 
 func (m *Maze) traverse(x, y int, p *Path) bool {
-	fmt.Println("traverse called ", x, y)
 	// 	if (x,y outside maze) return false
 	if m.isOutsideMaze(x, y) {
-		fmt.Println(x, y, " is outside maze")
 		return false
 	}
 
 	// if (x,y is goal) return true
 	if m.isMazeGoal(x, y) {
-		fmt.Println(x, y, " is maze goal")
 		return true
 	}
 	// if (x,y not open) return false
-	if m.isNotOpen(x, y) {
-		fmt.Println(x, y, " is not open")
+	if m.isOpen(x, y, p) {
 		return false
 	}
 
 	// mark x,y as part of solution path
-	fmt.Println("value of x ", x, " value of y ", y)
 	p.Push(strconv.Itoa(x) + "-" + strconv.Itoa(y))
 	// if (FIND-PATH(North of x,y) == true) return true
 	if m.traverse(x, y-1, p) {
 		return true
 	}
-	fmt.Println("value of x ", x, " value of y ", y)
+
 	// if (FIND-PATH(East of x,y) == true) return true
 	if m.traverse(x+1, y, p) {
 		return true
 	}
-	fmt.Println("value of x ", x, " value of y ", y)
+
 	// if (FIND-PATH(South of x,y) == true) return true
 	if m.traverse(x, y+1, p) {
 		return true
 	}
-	fmt.Println("value of x ", x, " value of y ", y)
+
 	// if (FIND-PATH(West of x,y) == true) return true
 	if m.traverse(x-1, y, p) {
 		return true
@@ -117,8 +111,8 @@ func (m *Maze) isMazeGoal(x, y int) bool {
 	return x == m.endAt.x && y == m.endAt.y
 }
 
-func (m *Maze) isNotOpen(x, y int) bool {
-	return m.cells[x][y].char != m.config.openChar
+func (m *Maze) isOpen(x, y int, p *Path) bool {
+	return m.cells[x][y].char == m.config.openChar && !p.Exists(strconv.Itoa(x)+"-"+strconv.Itoa(y))
 }
 
 // Display renders the Maze on screen
