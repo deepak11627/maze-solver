@@ -52,30 +52,32 @@ func (mr *MazeReader) Read(m *Maze) error {
 			return InvalidMazeRowErr
 		}
 
-		mazeRow, err := mr.readLine(row)
+		err := mr.readLine(row, m)
 		if err != nil {
 			return err
 		}
-		m.cells = append(m.cells, mazeRow)
+
 	}
 	return nil
 }
 
-func (mr *MazeReader) readLine(row string) ([]Cell, error) {
+func (mr *MazeReader) readLine(row string, m *Maze) error {
 	var mazeRow []Cell
-	for _, ch := range row {
-		if !mr.isValidChar(string(ch)) {
-			return mazeRow, InvalidMazeCharacterErr
+	for i, ch := range row {
+		if !m.isValidChar(Char(ch)) {
+			return InvalidMazeCharacterErr
 		}
-		mazeRow = append(mazeRow, Cell{char: string(ch)})
-	}
-	return mazeRow, nil
-}
+		c := Cell{char: Char(ch), x: len(m.cells), y: i}
 
-func (mr *MazeReader) isValidChar(ch string) bool {
-	validChars := map[string]struct{}{"#": struct{}{}, "e": struct{}{}, "o": struct{}{}, "x": struct{}{}}
-	if _, ok := validChars[ch]; ok {
-		return true
+		if m.isStartingChar(Char(ch)) {
+			m.startAt = c
+		}
+
+		if m.isEndingChar(Char(ch)) {
+			m.endAt = c
+		}
+		mazeRow = append(mazeRow, c)
 	}
-	return false
+	m.cells = append(m.cells, mazeRow)
+	return nil
 }

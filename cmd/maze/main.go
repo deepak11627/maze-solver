@@ -20,7 +20,7 @@ func main() {
 
 	// Maze file reader
 	mr := maze.NewMazeReader(file)
-	m := maze.NewMaze()
+	m := maze.NewMaze(maze.NewMazeConfig("e", "x", "#", "o"))
 
 	// Read maze file onto Maze struct
 	err = mr.Read(m)

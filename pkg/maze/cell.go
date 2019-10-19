@@ -1,5 +1,7 @@
 package maze
 
 type Cell struct {
-	char string
+	char Char
+	x    int
+	y    int
 }
