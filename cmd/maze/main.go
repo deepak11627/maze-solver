@@ -30,8 +30,8 @@ func main() {
 	m.Display()
 
 	// Find path of the maze, displays error if not found
-	_, err = m.FindPath()
-	failOnError(err)
+	//	_, err = m.FindPath()
+	//	failOnError(err)
 }
 
 func failOnError(err error) {

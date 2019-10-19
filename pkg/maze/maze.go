@@ -117,9 +117,10 @@ func (m *Maze) isOpen(x, y int, p *Path) bool {
 
 // Display renders the Maze on screen
 func (m *Maze) Display() {
+	fmt.Println("Here is the maze read from the file")
 	for _, cells := range m.cells {
 		for _, cell := range cells {
-			fmt.Print(cell)
+			fmt.Print(cell.char)
 		}
 		fmt.Println()
 	}
