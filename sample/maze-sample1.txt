@@ -1,0 +1,10 @@
+9 13
+#############
+eoo#o#ooo#oo#
+##o#o##o##o##
+#oooo#oo#ooox
+###o##o##o###
+#ooooooooooo#
+#####o###o###
+#ooooooooooo#
+#############
