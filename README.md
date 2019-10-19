@@ -1,6 +1,6 @@
 # Maze Solver
 
-A simple Maze solve program that reads the maze from a a specified and finds the path.
+A simple Maze solve program that reads the maze from a specified and finds the path.
 
 ## Prerequisite
 
