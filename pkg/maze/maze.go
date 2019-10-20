@@ -3,21 +3,22 @@ package maze
 import (
 	"errors"
 	"fmt"
-	"strconv"
 )
 
 // Char a type alias for string to confusion in signle and multi character strings
 type Char string
 
 type Config struct {
-	startChar Char
-	endChar   Char
-	wallChar  Char
-	openChar  Char
+	startChar   Char
+	endChar     Char
+	wallChar    Char
+	openChar    Char
+	badPathChar Char
+	pathChar    Char
 }
 
-func NewMazeConfig(s, e, w, o Char) *Config {
-	return &Config{s, e, w, o}
+func NewMazeConfig(s, e, w, o, b, p Char) *Config {
+	return &Config{s, e, w, o, b, p}
 }
 
 // Maze struct represents a maze of x * y dimension
@@ -62,6 +63,7 @@ func (m *Maze) FindPath() (*Path, error) {
 }
 
 func (m *Maze) traverse(x, y int, p *Path) bool {
+
 	// 	if (x,y outside maze) return false
 	if m.isOutsideMaze(x, y) {
 		return false
@@ -69,15 +71,19 @@ func (m *Maze) traverse(x, y int, p *Path) bool {
 
 	// if (x,y is goal) return true
 	if m.isMazeGoal(x, y) {
+
 		return true
 	}
 	// if (x,y not open) return false
-	if m.isOpen(x, y, p) {
+	if m.isNotOpen(x, y, p) {
+
 		return false
 	}
 
 	// mark x,y as part of solution path
-	p.Push(strconv.Itoa(x) + "-" + strconv.Itoa(y))
+	p.Push(Cell{x: x, y: y})
+
+	fmt.Println("Current Maze path travered ", p.Traverse())
 	// if (FIND-PATH(North of x,y) == true) return true
 	if m.traverse(x, y-1, p) {
 		return true
@@ -97,9 +103,9 @@ func (m *Maze) traverse(x, y int, p *Path) bool {
 	if m.traverse(x-1, y, p) {
 		return true
 	}
+
 	// unmark x,y as part of solution path
 	p.Pop()
-	// return false
 	return false
 }
 
@@ -111,16 +117,18 @@ func (m *Maze) isMazeGoal(x, y int) bool {
 	return x == m.endAt.x && y == m.endAt.y
 }
 
-func (m *Maze) isOpen(x, y int, p *Path) bool {
-	return m.cells[x][y].char == m.config.openChar && !p.Exists(strconv.Itoa(x)+"-"+strconv.Itoa(y))
+func (m *Maze) isNotOpen(x, y int, p *Path) bool {
+	if m.cells[x][y].char == m.config.wallChar {
+		return true
+	}
+	return p.Exists(Cell{x: x, y: y})
 }
 
 // Display renders the Maze on screen
 func (m *Maze) Display() {
-	fmt.Println("Here is the maze read from the file")
 	for _, cells := range m.cells {
 		for _, cell := range cells {
-			fmt.Print(cell.char)
+			fmt.Print(cell)
 		}
 		fmt.Println()
 	}

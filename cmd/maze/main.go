@@ -20,7 +20,7 @@ func main() {
 
 	// Maze file reader
 	mr := maze.NewMazeReader(file)
-	m := maze.NewMaze(maze.NewMazeConfig("e", "x", "#", "o"))
+	m := maze.NewMaze(maze.NewMazeConfig("e", "x", "#", "o", "b", "p"))
 
 	// Read maze file onto Maze struct
 	err = mr.Read(m)
@@ -30,8 +30,8 @@ func main() {
 	m.Display()
 
 	// Find path of the maze, displays error if not found
-	//	_, err = m.FindPath()
-	//	failOnError(err)
+	_, err = m.FindPath()
+	failOnError(err)
 }
 
 func failOnError(err error) {

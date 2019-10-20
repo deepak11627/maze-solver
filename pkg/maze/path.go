@@ -1,27 +1,44 @@
 package maze
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Path implimented using stack
-type Path []string
+type Path []Cell
 
 // Empty deletes all path elements
 func (s Path) Empty() bool { return len(s) == 0 }
 
 // Push adds a step to the path
-func (s *Path) Push(v string) { (*s) = append((*s), v) }
+func (s *Path) Push(v Cell) { (*s) = append((*s), v) }
 
 // Pop remove a step from the path
-func (s *Path) Pop() string {
+func (s *Path) Pop() Cell {
 	v := (*s)[len(*s)-1]
 	(*s) = (*s)[:len(*s)-1]
 	return v
 }
 
+func (s *Path) isPreviousStep(e Cell) bool {
+	if len(*s) == 0 {
+		return false
+	}
+	val := s.Pop()
+	s.Push(val)
+	if val == e {
+		return true
+	}
+	return false
+}
+
 // Exists checks if an element exists
-func (s *Path) Exists(e string) bool {
+func (s *Path) Exists(e Cell) bool {
 	for _, p := range *s {
 		if p == e {
+			if s.isPreviousStep(e) {
+				return false
+			}
 			return true
 		}
 	}
@@ -29,8 +46,10 @@ func (s *Path) Exists(e string) bool {
 }
 
 // Traverse renders the path
-func (s *Path) Traverse() {
+func (s *Path) Traverse() string {
+	var path []byte
 	for _, p := range *s {
-		fmt.Println(p + " ")
+		path = append(path, fmt.Sprintf("%d,%d -> ", p.x, p.y)...)
 	}
+	return string(path)
 }
